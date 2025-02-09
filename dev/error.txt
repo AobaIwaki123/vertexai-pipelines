@@ -1,0 +1,40 @@
+INFO:     35.191.206.179:57826 - "GET / HTTP/1.1" 200 OK
+INFO:     35.191.206.181:40900 - "GET / HTTP/1.1" 200 OK
+INFO:     35.191.206.180:36190 - "GET / HTTP/1.1" 200 OK
+INFO:     60.77.190.114:0 - "POST /api/v1/chats/new HTTP/1.1" 200 OK
+INFO:     60.77.190.114:0 - "GET /api/v1/chats/?page=1 HTTP/1.1" 200 OK
+INFO:     60.77.190.114:0 - "POST /api/v1/chats/0e99cdc3-8568-4518-8f92-40828ee53f27 HTTP/1.1" 200 OK
+INFO:     60.77.190.114:0 - "GET /api/v1/chats/?page=1 HTTP/1.1" 200 OK
+INFO  [open_webui.routers.openai] get_all_models()
+INFO  [open_webui.routers.openai] get_all_models()
+INFO:     60.77.190.114:0 - "POST /api/chat/completions HTTP/1.1" 200 OK
+INFO:     60.77.190.114:0 - "POST /api/v1/tasks/auto/completions HTTP/1.1" 200 OK
+ERROR [asyncio] Task exception was never retrieved
+future: <Task finished name='Task-3620' coro=<process_chat_response.<locals>.post_response_handler() done, defined at /app/backend/open_webui/utils/middleware.py:1126> exception=ClientPayloadError("Response payload is not completed: <TransferEncodingError: 400, message='Not enough data for satisfy transfer length header.'>")>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/aiohttp/client_proto.py", line 92, in connection_lost
+    uncompleted = self._parser.feed_eof()
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_http_parser.pyx", line 508, in aiohttp._http_parser.HttpParser.feed_eof
+aiohttp.http_exceptions.TransferEncodingError: 400, message:
+  Not enough data for satisfy transfer length header.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/backend/open_webui/utils/middleware.py", line 1571, in post_response_handler
+    await stream_body_handler(response)
+  File "/app/backend/open_webui/utils/middleware.py", line 1408, in stream_body_handler
+    async for line in response.body_iterator:
+  File "/usr/local/lib/python3.11/site-packages/aiohttp/streams.py", line 52, in __anext__
+    rv = await self.read_func()
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/aiohttp/streams.py", line 352, in readline
+    return await self.readuntil()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/aiohttp/streams.py", line 386, in readuntil
+    await self._wait("readuntil")
+  File "/usr/local/lib/python3.11/site-packages/aiohttp/streams.py", line 347, in _wait
+    await waiter
+aiohttp.client_exceptions.ClientPayloadError: Response payload is not completed: <TransferEncodingError: 400, message='Not enough data for satisfy transfer length header.'>
+INFO:     60.77.190.114:0 - "GET /api/v1/chats/?page=1 HTTP/1.1" 200 OK
