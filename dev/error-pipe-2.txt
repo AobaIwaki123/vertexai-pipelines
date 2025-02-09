@@ -1,0 +1,113 @@
+INFO:     10.90.0.141:46970 - "POST /google_vertexai_manifold_pipeline.gemini-1.5-pro-001/filter/inlet HTTP/1.1" 200 OK
+INFO:     10.90.0.141:46982 - "GET /models HTTP/1.1" 200 OK
+INFO:     10.90.0.141:46988 - "POST /google_vertexai_manifold_pipeline.gemini-1.5-pro-001/filter/inlet HTTP/1.1" 200 OK
+INFO:     10.90.0.141:46992 - "GET /models HTTP/1.1" 200 OK
+google_vertexai_manifold_pipeline.gemini-1.5-pro-001
+google_vertexai_manifold_pipeline.gemini-1.5-pro-001
+Pipe function called for model: gemini-1.5-pro-001
+Stream mode: False
+google_vertexai_manifold_pipeline.gemini-1.5-pro-001
+google_vertexai_manifold_pipeline.gemini-1.5-pro-001
+INFO:     10.90.0.141:47008 - "POST /chat/completions HTTP/1.1" 200 OK
+Pipe function called for model: gemini-1.5-pro-001
+Stream mode: True
+  File "/usr/local/lib/python3.11/site-packages/google/auth/compute_engine/_metadata.py", line 255, in get
+    raise exceptions.TransportError(
+google.auth.exceptions.TransportError: ('Failed to retrieve http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/my-gsa@zennaihackason.iam.gserviceaccount.com/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform.read-only from the Google Compute Engine metadata service. Status: 403 Response:\nb"Unable to generate access token; IAM returned 403 Forbidden: Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).\\nThis error could be caused by a missing IAM policy binding on the target IAM service account.\\nFor more information, refer to the Workload Identity documentation:\\n\\thttps://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to\\n\\n"', <google.auth.transport.requests._Response object at 0x7d842c6feb90>)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/grpc/_plugin_wrapping.py", line 105, in __call__
+    self._metadata_plugin(
+  File "/usr/local/lib/python3.11/site-packages/google/auth/transport/grpc.py", line 95, in __call__
+    callback(self._get_authorization_headers(context), None)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/auth/transport/grpc.py", line 81, in _get_authorization_headers
+    self._credentials.before_request(
+  File "/usr/local/lib/python3.11/site-packages/google/auth/credentials.py", line 239, in before_request
+    self._blocking_refresh(request)
+  File "/usr/local/lib/python3.11/site-packages/google/auth/credentials.py", line 202, in _blocking_refresh
+    self.refresh(request)
+  File "/usr/local/lib/python3.11/site-packages/google/auth/compute_engine/credentials.py", line 132, in refresh
+    raise new_exc from caught_exc
+google.auth.exceptions.RefreshError: ('Failed to retrieve http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/my-gsa@zennaihackason.iam.gserviceaccount.com/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform.read-only from the Google Compute Engine metadata service. Status: 403 Response:\nb"Unable to generate access token; IAM returned 403 Forbidden: Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).\\nThis error could be caused by a missing IAM policy binding on the target IAM service account.\\nFor more information, refer to the Workload Identity documentation:\\n\\thttps://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to\\n\\n"', <google.auth.transport.requests._Response object at 0x7d842c6feb90>)
+Error generating content: 503 Getting metadata from plugin failed with error: ('Failed to retrieve http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/my-gsa@zennaihackason.iam.gserviceaccount.com/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform.read-only from the Google Compute Engine metadata service. Status: 403 Response:\nb"Unable to generate access token; IAM returned 403 Forbidden: Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).\\nThis error could be caused by a missing IAM policy binding on the target IAM service account.\\nFor more information, refer to the Workload Identity documentation:\\n\\thttps://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to\\n\\n"', <google.auth.transport.requests._Response object at 0x7d842c6feb90>)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/grpc_helpers.py", line 170, in error_remapped_callable
+    return _StreamingResponseIterator(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/grpc_helpers.py", line 92, in __init__
+    self._stored_first_result = next(self._wrapped)
+                                ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+    return self._next()
+           ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+    raise self
+grpc._channel._MultiThreadedRendezvous: <_MultiThreadedRendezvous of RPC that terminated with:
+    status = StatusCode.UNAVAILABLE
+    details = "Getting metadata from plugin failed with error: ('Failed to retrieve http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/my-gsa@zennaihackason.iam.gserviceaccount.com/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform.read-only from the Google Compute Engine metadata service. Status: 403 Response:\nb"Unable to generate access token; IAM returned 403 Forbidden: Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).\\nThis error could be caused by a missing IAM policy binding on the target IAM service account.\\nFor more information, refer to the Workload Identity documentation:\\n\\thttps://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to\\n\\n"', <google.auth.transport.requests._Response object at 0x7d842c6fcf50>)"
+    debug_error_string = "UNKNOWN:Error received from peer  {created_time:"2025-02-09T13:56:32.871836762+00:00", grpc_status:14, grpc_message:"Getting metadata from plugin failed with error: (\'Failed to retrieve http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/my-gsa@zennaihackason.iam.gserviceaccount.com/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform.read-only from the Google Compute Engine metadata service. Status: 403 Response:\\nb\"Unable to generate access token; IAM returned 403 Forbidden: Permission \\\'iam.serviceAccounts.getAccessToken\\\' denied on resource (or it may not exist).\\\\nThis error could be caused by a missing IAM policy binding on the target IAM service account.\\\\nFor more information, refer to the Workload Identity documentation:\\\\n\\\\thttps://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to\\\\n\\\\n\"\', <google.auth.transport.requests._Response object at 0x7d842c6fcf50>)"}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/uvicorn/protocols/http/httptools_impl.py", line 435, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/base.py", line 189, in __call__
+    with collapse_excgroups():
+  File "/usr/local/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_utils.py", line 93, in collapse_excgroups
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/responses.py", line 261, in wrap
+    await func()
+  File "/usr/local/lib/python3.11/site-packages/starlette/responses.py", line 250, in stream_response
+    async for chunk in self.body_iterator:
+  File "/usr/local/lib/python3.11/site-packages/starlette/concurrency.py", line 65, in iterate_in_threadpool
+    yield await anyio.to_thread.run_sync(_next, as_iterator)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/starlette/concurrency.py", line 54, in _next
+    return next(iterator)
+           ^^^^^^^^^^^^^^
+  File "/app/main.py", line 702, in stream_content
+    for line in res:
+  File "/app/./pipelines/google_vertexai_manifold_pipeline.py", line 141, in stream_response
+    for chunk in response:
+  File "/usr/local/lib/python3.11/site-packages/vertexai/generative_models/_generative_models.py", line 861, in _generate_content_streaming
+    response_stream = self._prediction_client.stream_generate_content(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2289, in stream_generate_content
+    response = rpc(
+               ^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/grpc_helpers.py", line 174, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ServiceUnavailable: 503 Getting metadata from plugin failed with error: ('Failed to retrieve http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/my-gsa@zennaihackason.iam.gserviceaccount.com/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform.read-only from the Google Compute Engine metadata service. Status: 403 Response:\nb"Unable to generate access token; IAM returned 403 Forbidden: Permission \'iam.serviceAccounts.getAccessToken\' denied on resource (or it may not exist).\\nThis error could be caused by a missing IAM policy binding on the target IAM service account.\\nFor more information, refer to the Workload Identity documentation:\\n\\thttps://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to\\n\\n"', <google.auth.transport.requests._Response object at 0x7d842c6fcf50>)
+INFO:     10.90.0.141:47006 - "POST /chat/completions HTTP/1.1" 200 OK
