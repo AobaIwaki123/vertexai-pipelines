@@ -26,8 +26,9 @@ from vertexai.generative_models import (
     HarmCategory,
     Part,
 )
+from logging import getLogger
 
-
+logger = getLogger(__name__)
 class Pipeline:
     """Google GenAI pipeline"""
 
@@ -86,7 +87,8 @@ class Pipeline:
 
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
-
+            logger.info(f"Pipe function called for model: {model_id}")
+            
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
             )
