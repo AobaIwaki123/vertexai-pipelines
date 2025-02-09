@@ -1,0 +1,102 @@
+INFO:     10.90.0.141:46166 - "POST /google_genai.gemini-1.0-pro/filter/inlet HTTP/1.1" 200 OK
+INFO:     10.90.0.141:46178 - "GET /models HTTP/1.1" 200 OK
+google_genai.gemini-1.0-pro
+google_genai.gemini-1.0-pro
+INFO:     10.90.0.141:46188 - "POST /chat/completions HTTP/1.1" 200 OK
+Pipe function called for model: gemini-1.0-pro
+Stream mode: True
+INFO:     10.90.0.141:46192 - "POST /google_genai.gemini-1.0-pro/filter/outlet HTTP/1.1" 200 OK
+INFO:     10.90.0.141:36440 - "POST /google_vertexai_manifold_pipeline.gemini-flash-experimental/filter/inlet HTTP/1.1" 200 OK
+INFO:     10.90.0.141:36444 - "GET /models HTTP/1.1" 200 OK
+google_vertexai_manifold_pipeline.gemini-flash-experimental
+google_vertexai_manifold_pipeline.gemini-flash-experimental
+INFO:     10.90.0.141:36456 - "POST /chat/completions HTTP/1.1" 200 OK
+Pipe function called for model: gemini-flash-experimental
+Stream mode: True
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/grpc_helpers.py", line 170, in error_remapped_callable
+    return _StreamingResponseIterator(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/grpc_helpers.py", line 92, in __init__
+    self._stored_first_result = next(self._wrapped)
+                                ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+    return self._next()
+           ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+    raise self
+grpc._channel._MultiThreadedRendezvous: <_MultiThreadedRendezvous of RPC that terminated with:
+    status = StatusCode.PERMISSION_DENIED
+    details = "Permission 'aiplatform.endpoints.predict' denied on resource '//aiplatform.googleapis.com/projects/zennaihackason/locations/us-central1/publishers/google/models/gemini-flash-experimental' (or it may not exist)."
+    debug_error_string = "UNKNOWN:Error received from peer ipv4:108.177.121.95:443 {grpc_message:"Permission \'aiplatform.endpoints.predict\' denied on resource \'//aiplatform.googleapis.com/projects/zennaihackason/locations/us-central1/publishers/google/models/gemini-flash-experimental\' (or it may not exist).", grpc_status:7, created_time:"2025-02-09T13:42:18.013819592+00:00"}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/uvicorn/protocols/http/httptools_impl.py", line 435, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/base.py", line 189, in __call__
+    with collapse_excgroups():
+  File "/usr/local/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_utils.py", line 93, in collapse_excgroups
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/responses.py", line 261, in wrap
+    await func()
+  File "/usr/local/lib/python3.11/site-packages/starlette/responses.py", line 250, in stream_response
+    async for chunk in self.body_iterator:
+  File "/usr/local/lib/python3.11/site-packages/starlette/concurrency.py", line 65, in iterate_in_threadpool
+    yield await anyio.to_thread.run_sync(_next, as_iterator)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/starlette/concurrency.py", line 54, in _next
+    return next(iterator)
+           ^^^^^^^^^^^^^^
+  File "/app/main.py", line 702, in stream_content
+    for line in res:
+  File "/app/./pipelines/google_vertexai_manifold_pipeline.py", line 141, in stream_response
+    for chunk in response:
+  File "/usr/local/lib/python3.11/site-packages/vertexai/generative_models/_generative_models.py", line 861, in _generate_content_streaming
+    response_stream = self._prediction_client.stream_generate_content(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2289, in stream_generate_content
+    response = rpc(
+               ^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/google/api_core/grpc_helpers.py", line 174, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.PermissionDenied: 403 Permission 'aiplatform.endpoints.predict' denied on resource '//aiplatform.googleapis.com/projects/zennaihackason/locations/us-central1/publishers/google/models/gemini-flash-experimental' (or it may not exist). [reason: "IAM_PERMISSION_DENIED"
+domain: "aiplatform.googleapis.com"
+metadata {
+  key: "resource"
+  value: "projects/zennaihackason/locations/us-central1/publishers/google/models/gemini-flash-experimental"
+}
+metadata {
+  key: "permission"
+  value: "aiplatform.endpoints.predict"
+}
+]
