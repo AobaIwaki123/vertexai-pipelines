@@ -13,7 +13,10 @@ usage_instructions:
   - For use outside of Google Cloud: Set the GOOGLE_APPLICATION_CREDENTIALS environment variable to the path of the service account key file.
 """
 
+import logging
 import os
+import sys
+from logging import getLogger
 from typing import Iterator, List, Union
 
 import vertexai
@@ -26,9 +29,16 @@ from vertexai.generative_models import (
     HarmCategory,
     Part,
 )
-from logging import getLogger
+
+logging.basicConfig(
+    level=logging.INFO,  # 出力レベルを INFO に設定（必要に応じて変更）
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)],
+)
 
 logger = getLogger(__name__)
+
+
 class Pipeline:
     """Google GenAI pipeline"""
 
@@ -53,7 +63,10 @@ class Pipeline:
         self.pipelines = [
             {"id": "gemini-1.5-flash-001", "name": "Gemini 1.5 Flash"},
             {"id": "gemini-1.5-pro-001", "name": "Gemini 1.5 Pro"},
-            {"id": "gemini-flash-experimental", "name": "Gemini 1.5 Flash Experimental"},
+            {
+                "id": "gemini-flash-experimental",
+                "name": "Gemini 1.5 Flash Experimental",
+            },
             {"id": "gemini-pro-experimental", "name": "Gemini 1.5 Pro Experimental"},
         ]
 
@@ -88,7 +101,7 @@ class Pipeline:
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
             logger.info(f"Pipe function called for model: {model_id}")
-            
+
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
             )
