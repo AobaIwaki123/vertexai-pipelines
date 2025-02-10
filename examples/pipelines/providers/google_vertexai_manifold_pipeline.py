@@ -27,8 +27,9 @@ from vertexai.generative_models import (
     Part,
 )
 from langchain_google_vertexai import VertexAIEmbeddings
-from langchain.vectorstores.utils import DistanceStrategy
 from langchain_community.vectorstores import BigQueryVectorSearch
+from langchain_community.vectorstores.utils import DistanceStrategy
+
 
 class Pipeline:
     """Google GenAI pipeline"""
@@ -60,6 +61,10 @@ class Pipeline:
             },
             {"id": "gemini-pro-experimental", "name": "Gemini 1.5 Pro Experimental"},
         ]
+        
+        embedding = VertexAIEmbeddings(
+            model_name="textembedding-gecko-multilingual@latest", project=PROJECT_ID
+        )
 
     async def on_startup(self) -> None:
         """This function is called when the server is started."""
