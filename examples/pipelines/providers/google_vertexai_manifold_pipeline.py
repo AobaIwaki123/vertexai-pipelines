@@ -236,7 +236,6 @@ class Pipeline:
         relevant_docs = []
 
         for doc in retrieved_docs:
-            print(f"Relevant Law: {doc['metadata']['law_name']}")
             response_doc = {
                 "content": doc.page_content,
                 "metadata": doc.metadata,
