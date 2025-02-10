@@ -105,6 +105,7 @@ class Pipeline:
 
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
+            print(f"User Message: {user_message}")
 
             relevant_docs = self.retrieve_relevant_laws(user_message)
             
@@ -211,6 +212,7 @@ class Pipeline:
 
     def retrieve_relevant_laws(self, query: str, k: int = 3) -> list[dict]:
         # 1. ユーザーの質問に関連するドキュメントを取得
+        print("Retrieve Docs")
         retrieved_docs = self.store.similarity_search(query, k)
         # retrieved_docs_mock = [
         #     {
@@ -236,8 +238,8 @@ class Pipeline:
         for doc in retrieved_docs:
             print(f"Relevant Law: {doc['metadata']['law_name']}")
             response_doc = {
-                "content": doc["page_content"],
-                "metadata": doc["metadata"],
+                "content": doc.page_content,
+                "metadata": doc.metadata,
             }
             relevant_docs.append(response_doc)
 
