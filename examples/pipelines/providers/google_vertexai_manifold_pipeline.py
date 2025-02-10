@@ -91,6 +91,7 @@ class Pipeline:
 
             # ユーザーの質問から関連する法令情報を取得
             retrieved_laws = self.retrieve_relevant_laws(user_message, k=3)
+            print(f"Retrieved laws: {retrieved_laws}")
             if retrieved_laws:
                 # 取得した法令情報をテキストに整形
                 laws_context = "以下は関連法令の詳細情報です：\n"
@@ -132,12 +133,16 @@ class Pipeline:
             else:
                 safety_settings = body.get("safety_settings")
 
+            print(f"Generating content... with {contents}")
+
             response = model.generate_content(
                 contents,
                 stream=body.get("stream", False),
                 generation_config=generation_config,
                 safety_settings=safety_settings,
             )
+
+            # print(f"Response: {response}")
 
             if body.get("stream", False):
                 return self.stream_response(response)
