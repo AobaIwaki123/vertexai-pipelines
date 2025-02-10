@@ -6,7 +6,7 @@ version: 1.0
 license: MIT
 description: A pipeline for generating text using Google's GenAI models in Open-WebUI.
 requirements: vertexai, langchain==0.3.3, langchain-community==0.3.2, langchain-google-vertexai==2.0.4, pydantic==2.7.4
-environment_variables: GOOGLE_PROJECT_ID, GOOGLE_CLOUD_REGION, BIG_QUERY_DATASET, BIG_QUERY_TABLE
+environment_variables: GOOGLE_PROJECT_ID, GOOGLE_CLOUD_REGION
 usage_instructions:
   To use Gemini with the Vertex AI API, a service account with the appropriate role (e.g., `roles/aiplatform.user`) is required.
   - For deployment on Google Cloud: Associate the service account with the deployment.
