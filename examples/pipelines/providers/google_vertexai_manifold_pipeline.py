@@ -227,4 +227,7 @@ class Pipeline:
 #         query_job = client.query(query_string, job_config=job_config)
 #         results = query_job.result()
         # return [dict(row) for row in results]
-        return [{"法令名": "法律A", "法令内容": "法律Aの内容"}, {"法令名": "法律B", "法令内容": "法律Bの内容"}]
+        return [
+            {"law_name": "法律A", "law_content": "法律Aの内容"},
+            {"law_name": "法律B", "law_content": "法律Bの内容"},
+        ]
