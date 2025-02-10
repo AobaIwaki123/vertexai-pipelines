@@ -16,9 +16,10 @@ usage_instructions:
 import os
 from typing import Iterator, List, Union
 
-import numpy as np
 import vertexai
-from google.cloud import bigquery
+from langchain.vectorstores.utils import DistanceStrategy
+from langchain_community.vectorstores import BigQueryVectorSearch
+from langchain_google_vertexai import VertexAIEmbeddings
 from pydantic import BaseModel, Field
 from vertexai.generative_models import (
     Content,
@@ -39,6 +40,8 @@ class Pipeline:
         GOOGLE_PROJECT_ID: str = ""
         GOOGLE_CLOUD_REGION: str = ""
         USE_PERMISSIVE_SAFETY: bool = Field(default=False)
+        BIG_QUERY_DATASET: str = ""
+        BIG_QUERY_TABLE: str = ""
 
     def __init__(self):
         self.type = "manifold"
@@ -49,6 +52,8 @@ class Pipeline:
                 "GOOGLE_PROJECT_ID": os.getenv("GOOGLE_PROJECT_ID", ""),
                 "GOOGLE_CLOUD_REGION": os.getenv("GOOGLE_CLOUD_REGION", ""),
                 "USE_PERMISSIVE_SAFETY": False,
+                "BIG_queRY_DATASET": os.getenv("BIG_QUERY_DATASET", ""),
+                "BIG_QUERY_TABLE": os.getenv("BIG_QUERY_TABLE", ""),
             }
         )
         self.pipelines = [
@@ -63,6 +68,19 @@ class Pipeline:
         vertexai.init(
             project=self.valves.GOOGLE_PROJECT_ID,
             location=self.valves.GOOGLE_CLOUD_REGION,
+        )
+
+        embedding = VertexAIEmbeddings(
+            model_name="textembedding-gecko-multilingual@latest",
+            project=self.valves.GOOGLE_PROJECT_ID,
+        )
+
+        self.store = BigQueryVectorSearch(
+            project_id=self.valves.GOOGLE_PROJECT_ID,
+            dataset_name=self.valves.BIG_QUERY_DATASET,
+            table_name=self.valves.BIG_QUERY_TABLE,
+            embedding=embedding,
+            distance_strategy=DistanceStrategy.COSINE,
         )
 
     async def on_shutdown(self) -> None:
@@ -94,9 +112,17 @@ class Pipeline:
             print(f"Retrieved laws: {retrieved_laws}")
             if retrieved_laws:
                 # 取得した法令情報をテキストに整形
-                laws_context = "以下は関連法令の詳細情報です\n取得した法令情報をもとにユーザーの質問に回答をしてください:\n"
+                laws_context = "以下はユーザーの質問に関連する法令情報です:\n"
+                laws_context += (
+                    "ユーザーからの質問に対して、法令をもとに回答してください。\n"
+                )
+                laws_context += (
+                    "この時、参照した法令番号と法令名を明記してください。\n\n"
+                )
                 for law in retrieved_laws:
-                    laws_context += f"【{law['law_name']}】\n{law['law_content']}\n\n"
+                    laws_context += f"法令名: {law['metadata']['law_name']}\n"
+                    laws_context += f"法令番号: {law['metadata']['law_number']}\n"
+                    laws_context += f"法令内容: {law['content']}\n\n"
 
                 # システムメッセージとして先頭に追加する
                 messages.insert(0, {"role": "system", "content": laws_context})
@@ -144,8 +170,6 @@ class Pipeline:
                 safety_settings=safety_settings,
             )
 
-            # print(f"Response: {response}")
-
             if body.get("stream", False):
                 return self.stream_response(response)
             else:
@@ -189,63 +213,26 @@ class Pipeline:
 
         return contents
 
-    # ※ここでは、ユーザーの質問から埋め込みを得る関数 compute_embedding() を仮定します。
+    def retrieve_relevant_laws(self, query: str, k: int = 3) -> list[dict]:
+        # 1. ユーザーの質問に関連するドキュメントを取得
+        retrieved_docs = self.store.similarity_search(query, k)
 
-    def compute_embedding(self, text: str) -> np.ndarray:
-        # ここにVertex AIや他の埋め込みモデルを用いた処理を実装してください
-        # 例: embedding = embedding_model.embed(text)
-        pass
+        # 2. 取得したドキュメントの整形
+        # Relevant Docs Format:
+        ## {
+        ##    "content": "TEXT",
+        ##    "metadata": {
+        ##        "law_name": "TEXT",
+        ##        "law_number": "TEXT"
+        ##    }
+        ## }
+        relevant_docs = []
 
-    def retrieve_relevant_laws(self, query: str, k: int = 3) -> list:
-        # 1. ユーザーの質問からベクトルを計算
-#         query_embedding = self.compute_embedding(query)  # numpy array 等
-# 
-#         # 2. BigQueryクライアントの初期化（環境変数で設定済みのプロジェクトIDを使用）
-#         client = bigquery.Client(project=self.valves.GOOGLE_PROJECT_ID)
-# 
-#         # 3. ベクトル検索のクエリ（実際のSQLはBigQueryでの実装方法に合わせて調整してください）
-#         query_string = """
-#         WITH LawData AS (
-#         SELECT
-#             law_name,
-#             law_content,
-#             embedding
-#         FROM `your_project.your_dataset.laws_detailed`
-#         )
-#         SELECT
-#         law_name,
-#         law_content,
-#         ML.PREDICT_VECTOR_SIMILARITY(embedding, @query_embedding) AS similarity
-#         FROM LawData
-#         WHERE ML.PREDICT_VECTOR_SIMILARITY(embedding, @query_embedding) > 0.8
-#         ORDER BY similarity DESC
-#         LIMIT @k
-#         """
-# 
-#         job_config = bigquery.QueryJobConfig(
-#             query_parameters=[
-#                 bigquery.ArrayQueryParameter(
-#                     "query_embedding", "FLOAT64", query_embedding.tolist()
-#                 ),
-#                 bigquery.ScalarQueryParameter("k", "INT64", k),
-#             ]
-#         )
-# 
-#         query_job = client.query(query_string, job_config=job_config)
-#         results = query_job.result()
-        # return [dict(row) for row in results]
-        # Return　Mock Data
-        return [
-            {
-                "law_name": "個人情報保護法",
-                "law_content": "個人情報保護法は、個人情報の適切な取り扱いを義務付ける法律です。",
-            },
-            {
-                "law_name": "著作権法",
-                "law_content": "著作権法は、著作物の権利を保護する法律です。",
-            },
-            {
-                "law_name": "労働基準法",
-                "law_content": "労働基準法は、労働者の権利を保護する法律です。",
-            },
-        ]
+        for doc in retrieved_docs:
+            response_doc = {
+                "content": doc.page_content,
+                "metadata": doc.metadata,
+            }
+            relevant_docs.append(response_doc)
+
+        return relevant_docs
