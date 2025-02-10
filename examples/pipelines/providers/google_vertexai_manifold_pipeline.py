@@ -5,7 +5,7 @@ date: 2024-09-19
 version: 1.0
 license: MIT
 description: A pipeline for generating text using Google's GenAI models in Open-WebUI.
-requirements: vertexai
+requirements: vertexai, langchain-google-vertexai, langchain-community, langchain_google_vertexai
 environment_variables: GOOGLE_PROJECT_ID, GOOGLE_CLOUD_REGION
 usage_instructions:
   To use Gemini with the Vertex AI API, a service account with the appropriate role (e.g., `roles/aiplatform.user`) is required.
@@ -26,7 +26,9 @@ from vertexai.generative_models import (
     HarmCategory,
     Part,
 )
-
+from langchain_google_vertexai import VertexAIEmbeddings
+from langchain.vectorstores.utils import DistanceStrategy
+from langchain_community.vectorstores import BigQueryVectorSearch
 
 class Pipeline:
     """Google GenAI pipeline"""
