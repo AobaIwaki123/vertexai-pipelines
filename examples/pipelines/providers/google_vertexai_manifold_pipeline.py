@@ -17,9 +17,9 @@ import os
 from typing import Iterator, List, Union
 
 import vertexai
-# from langchain.vectorstores.utils import DistanceStrategy
-# from langchain_community.vectorstores import BigQueryVectorSearch
-# from langchain_google_vertexai import VertexAIEmbeddings
+from langchain.vectorstores.utils import DistanceStrategy
+from langchain_community.vectorstores import BigQueryVectorSearch
+from langchain_google_vertexai import VertexAIEmbeddings
 from pydantic import BaseModel, Field
 from vertexai.generative_models import (
     Content,
@@ -70,18 +70,18 @@ class Pipeline:
             location=self.valves.GOOGLE_CLOUD_REGION,
         )
 
-#         embedding = VertexAIEmbeddings(
-#             model_name="textembedding-gecko-multilingual@latest",
-#             project=self.valves.GOOGLE_PROJECT_ID,
-#         )
-# 
-#         self.store = BigQueryVectorSearch(
-#             project_id=self.valves.GOOGLE_PROJECT_ID,
-#             dataset_name=self.valves.BIG_QUERY_DATASET,
-#             table_name=self.valves.BIG_QUERY_TABLE,
-#             embedding=embedding,
-#             distance_strategy=DistanceStrategy.COSINE,
-#         )
+        embedding = VertexAIEmbeddings(
+            model_name="textembedding-gecko-multilingual@latest",
+            project=self.valves.GOOGLE_PROJECT_ID,
+        )
+
+        self.store = BigQueryVectorSearch(
+            project_id=self.valves.GOOGLE_PROJECT_ID,
+            dataset_name="law_db",
+            table_name="personal_info",
+            embedding=embedding,
+            distance_strategy=DistanceStrategy.COSINE,
+        )
 
     async def on_shutdown(self) -> None:
         """This function is called when the server is stopped."""
