@@ -227,7 +227,18 @@ class Pipeline:
 #         query_job = client.query(query_string, job_config=job_config)
 #         results = query_job.result()
         # return [dict(row) for row in results]
+        # Return　Mock Data
         return [
-            {"law_name": "法律A", "law_content": "法律Aの内容"},
-            {"law_name": "法律B", "law_content": "法律Bの内容"},
+            {
+                "law_name": "個人情報保護法",
+                "law_content": "個人情報保護法は、個人情報の適切な取り扱いを義務付ける法律です。",
+            },
+            {
+                "law_name": "著作権法",
+                "law_content": "著作権法は、著作物の権利を保護する法律です。",
+            },
+            {
+                "law_name": "労働基準法",
+                "law_content": "労働基準法は、労働者の権利を保護する法律です。",
+            },
         ]
