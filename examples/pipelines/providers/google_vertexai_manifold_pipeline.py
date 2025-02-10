@@ -5,7 +5,7 @@ date: 2024-09-19
 version: 1.0
 license: MIT
 description: A pipeline for generating text using Google's GenAI models in Open-WebUI.
-requirements: vertexai, langchain==0.3.3, langchain-community==0.3.2, langchain-google-vertexai==2.0.4, pydantic==2.7.4
+requirements: vertexai
 environment_variables: GOOGLE_PROJECT_ID, GOOGLE_CLOUD_REGION
 usage_instructions:
   To use Gemini with the Vertex AI API, a service account with the appropriate role (e.g., `roles/aiplatform.user`) is required.
@@ -17,9 +17,6 @@ import os
 from typing import Iterator, List, Union
 
 import vertexai
-from langchain.vectorstores.utils import DistanceStrategy
-from langchain_community.vectorstores import BigQueryVectorSearch
-from langchain_google_vertexai import VertexAIEmbeddings
 from pydantic import BaseModel, Field
 from vertexai.generative_models import (
     Content,
@@ -55,20 +52,12 @@ class Pipeline:
         self.pipelines = [
             {"id": "gemini-1.5-flash-001", "name": "Gemini 1.5 Flash"},
             {"id": "gemini-1.5-pro-001", "name": "Gemini 1.5 Pro"},
+            {
+                "id": "gemini-flash-experimental",
+                "name": "Gemini 1.5 Flash Experimental",
+            },
+            {"id": "gemini-pro-experimental", "name": "Gemini 1.5 Pro Experimental"},
         ]
-
-#         embedding = VertexAIEmbeddings(
-#             model_name="textembedding-gecko-multilingual@latest",
-#             project=self.valves.GOOGLE_PROJECT_ID,
-#         )
-# 
-#         self.store = BigQueryVectorSearch(
-#             project_id=self.valves.GOOGLE_PROJECT_ID,
-#             dataset_name="law_db",
-#             table_name="personal_info",
-#             embedding=embedding,
-#             distance_strategy=DistanceStrategy.COSINE,
-#         )
 
     async def on_startup(self) -> None:
         """This function is called when the server is started."""
@@ -100,34 +89,10 @@ class Pipeline:
 
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
-            print(f"Messages: {messages}")
-            print(f"Body: {body}")
-
-            # ユーザーの質問から関連する法令情報を取得
-            retrieved_laws = self.retrieve_relevant_laws(user_message, k=3)
-            print(f"Retrieved laws: {retrieved_laws}")
-            if retrieved_laws:
-                # 取得した法令情報をテキストに整形
-                laws_context = "以下はユーザーの質問に関連する法令情報です:\n"
-                laws_context += (
-                    "ユーザーからの質問に対して、法令をもとに回答してください。\n"
-                )
-                laws_context += (
-                    "この時、参照した法令番号と法令名を明記してください。\n\n"
-                )
-                for law in retrieved_laws:
-                    laws_context += f"法令名: {law['metadata']['law_name']}\n"
-                    laws_context += f"法令番号: {law['metadata']['law_number']}\n"
-                    laws_context += f"法令内容: {law['content']}\n\n"
-
-                # システムメッセージとして先頭に追加する
-                messages.insert(0, {"role": "system", "content": laws_context})
 
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
             )
-
-            print(f"System message: {system_message}")
 
             model = GenerativeModel(
                 model_name=model_id,
@@ -156,8 +121,6 @@ class Pipeline:
                 }
             else:
                 safety_settings = body.get("safety_settings")
-
-            print("Generating content...")
 
             response = model.generate_content(
                 contents,
@@ -208,36 +171,3 @@ class Pipeline:
             contents.append(Content(role=role, parts=parts))
 
         return contents
-
-    def retrieve_relevant_laws(self, query: str, k: int = 3) -> list[dict]:
-        # 1. ユーザーの質問に関連するドキュメントを取得
-        # retrieved_docs = self.store.similarity_search(query, k)
-        retrieved_docs_mock = [
-            {
-                "page_content": "法令の内容",
-                "metadata": {
-                    "law_name": "法令名",
-                    "law_number": "法令番号",
-                },
-            }
-        ]
-
-        # 2. 取得したドキュメントの整形
-        # Relevant Docs Format:
-        ## {
-        ##    "content": "TEXT",
-        ##    "metadata": {
-        ##        "law_name": "TEXT",
-        ##        "law_number": "TEXT"
-        ##    }
-        ## }
-        relevant_docs = []
-
-        for doc in retrieved_docs_mock:
-            response_doc = {
-                "content": doc["page_content"],
-                "metadata": doc["metadata"],
-            }
-            relevant_docs.append(response_doc)
-
-        return relevant_docs
