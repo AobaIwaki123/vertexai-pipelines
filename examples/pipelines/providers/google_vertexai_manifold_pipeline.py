@@ -57,6 +57,18 @@ class Pipeline:
             {"id": "gemini-1.5-pro-001", "name": "Gemini 1.5 Pro"},
         ]
 
+        embedding = VertexAIEmbeddings(
+            model_name="textembedding-gecko-multilingual@latest",
+            project=self.valves.GOOGLE_PROJECT_ID,
+        )
+
+        self.store = BigQueryVectorSearch(
+            project_id=self.valves.GOOGLE_PROJECT_ID,
+            dataset_name="law_db",
+            table_name="personal_info",
+            embedding=embedding,
+            distance_strategy=DistanceStrategy.COSINE,
+        )
 
     async def on_startup(self) -> None:
         """This function is called when the server is started."""
@@ -66,19 +78,6 @@ class Pipeline:
             project=self.valves.GOOGLE_PROJECT_ID,
             location=self.valves.GOOGLE_CLOUD_REGION,
         )
-
-#         embedding = VertexAIEmbeddings(
-#             model_name="textembedding-gecko-multilingual@latest",
-#             project=self.valves.GOOGLE_PROJECT_ID,
-#         )
-# 
-#         self.store = BigQueryVectorSearch(
-#             project_id=self.valves.GOOGLE_PROJECT_ID,
-#             dataset_name="law_db",
-#             table_name="personal_info",
-#             embedding=embedding,
-#             distance_strategy=DistanceStrategy.COSINE,
-#         )
 
     async def on_shutdown(self) -> None:
         """This function is called when the server is stopped."""
@@ -236,8 +235,8 @@ class Pipeline:
 
         for doc in retrieved_docs_mock:
             response_doc = {
-                "content": doc['page_content'],
-                "metadata": doc['metadata'],
+                "content": doc["page_content"],
+                "metadata": doc["metadata"],
             }
             relevant_docs.append(response_doc)
 
