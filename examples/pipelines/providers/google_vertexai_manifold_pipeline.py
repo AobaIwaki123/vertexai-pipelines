@@ -30,7 +30,6 @@ from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_community.vectorstores import BigQueryVectorSearch
 from langchain_community.vectorstores.utils import DistanceStrategy
 
-
 class Pipeline:
     """Google GenAI pipeline"""
 
@@ -64,6 +63,15 @@ class Pipeline:
         embedding = VertexAIEmbeddings(
             model_name="textembedding-gecko-multilingual@latest",
             project=self.valves.GOOGLE_PROJECT_ID,
+        )
+        DATASET = "law_db"
+        TABLE = "personal_info"
+        self.store = BigQueryVectorSearch(
+            project_id=self.valves.GOOGLE_PROJECT_ID,
+            dataset_name=DATASET,
+            table_name=TABLE,
+            embedding=embedding,
+            distance_strategy=DistanceStrategy.COSINE,
         )
 
     async def on_startup(self) -> None:
