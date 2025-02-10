@@ -211,16 +211,16 @@ class Pipeline:
 
     def retrieve_relevant_laws(self, query: str, k: int = 3) -> list[dict]:
         # 1. ユーザーの質問に関連するドキュメントを取得
-        # retrieved_docs = self.store.similarity_search(query, k)
-        retrieved_docs_mock = [
-            {
-                "page_content": "法令の内容",
-                "metadata": {
-                    "law_name": "法令名",
-                    "law_number": "法令番号",
-                },
-            }
-        ]
+        retrieved_docs = self.store.similarity_search(query, k)
+        # retrieved_docs_mock = [
+        #     {
+        #         "page_content": "法令の内容",
+        #         "metadata": {
+        #             "law_name": "法令名",
+        #             "law_number": "法令番号",
+        #         },
+        #     }
+        # ]
 
         # 2. 取得したドキュメントの整形
         # Relevant Docs Format:
@@ -233,7 +233,7 @@ class Pipeline:
         ## }
         relevant_docs = []
 
-        for doc in retrieved_docs_mock:
+        for doc in retrieved_docs:
             response_doc = {
                 "content": doc["page_content"],
                 "metadata": doc["metadata"],
