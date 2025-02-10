@@ -125,6 +125,8 @@ class Pipeline:
 
                 # システムメッセージとして先頭に追加する
                 messages.insert(0, {"role": "system", "content": laws_context})
+                
+            print(messages)
 
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
