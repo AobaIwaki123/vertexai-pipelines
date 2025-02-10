@@ -6,7 +6,7 @@ version: 1.0
 license: MIT
 description: A pipeline for generating text using Google's GenAI models in Open-WebUI.
 requirements: vertexai, langchain==0.3.3, langchain-community==0.3.2, langchain-google-vertexai==2.0.4, pydantic==2.7.4
-environment_variables: GOOGLE_PROJECT_ID, GOOGLE_CLOUD_REGION, BIG_QUERY_DATASET, BIG_QUERY_TABLE
+environment_variables: GOOGLE_PROJECT_ID
 usage_instructions:
   To use Gemini with the Vertex AI API, a service account with the appropriate role (e.g., `roles/aiplatform.user`) is required.
   - For deployment on Google Cloud: Associate the service account with the deployment.
@@ -17,9 +17,9 @@ import os
 from typing import Iterator, List, Union
 
 import vertexai
-from langchain.vectorstores.utils import DistanceStrategy
-from langchain_community.vectorstores import BigQueryVectorSearch
-from langchain_google_vertexai import VertexAIEmbeddings
+# from langchain.vectorstores.utils import DistanceStrategy
+# from langchain_community.vectorstores import BigQueryVectorSearch
+# from langchain_google_vertexai import VertexAIEmbeddings
 from pydantic import BaseModel, Field
 from vertexai.generative_models import (
     Content,
@@ -40,8 +40,8 @@ class Pipeline:
         GOOGLE_PROJECT_ID: str = ""
         GOOGLE_CLOUD_REGION: str = ""
         USE_PERMISSIVE_SAFETY: bool = Field(default=False)
-        BIG_QUERY_DATASET: str = ""
-        BIG_QUERY_TABLE: str = ""
+        # BIG_QUERY_DATASET: str = ""
+        # BIG_QUERY_TABLE: str = ""
 
     def __init__(self):
         self.type = "manifold"
@@ -52,8 +52,8 @@ class Pipeline:
                 "GOOGLE_PROJECT_ID": os.getenv("GOOGLE_PROJECT_ID", ""),
                 "GOOGLE_CLOUD_REGION": os.getenv("GOOGLE_CLOUD_REGION", ""),
                 "USE_PERMISSIVE_SAFETY": False,
-                "BIG_queRY_DATASET": os.getenv("BIG_QUERY_DATASET", ""),
-                "BIG_QUERY_TABLE": os.getenv("BIG_QUERY_TABLE", ""),
+                # "BIG_queRY_DATASET": os.getenv("BIG_QUERY_DATASET", ""),
+                # "BIG_QUERY_TABLE": os.getenv("BIG_QUERY_TABLE", ""),
             }
         )
         self.pipelines = [
@@ -70,18 +70,18 @@ class Pipeline:
             location=self.valves.GOOGLE_CLOUD_REGION,
         )
 
-        embedding = VertexAIEmbeddings(
-            model_name="textembedding-gecko-multilingual@latest",
-            project=self.valves.GOOGLE_PROJECT_ID,
-        )
-
-        self.store = BigQueryVectorSearch(
-            project_id=self.valves.GOOGLE_PROJECT_ID,
-            dataset_name=self.valves.BIG_QUERY_DATASET,
-            table_name=self.valves.BIG_QUERY_TABLE,
-            embedding=embedding,
-            distance_strategy=DistanceStrategy.COSINE,
-        )
+#         embedding = VertexAIEmbeddings(
+#             model_name="textembedding-gecko-multilingual@latest",
+#             project=self.valves.GOOGLE_PROJECT_ID,
+#         )
+# 
+#         self.store = BigQueryVectorSearch(
+#             project_id=self.valves.GOOGLE_PROJECT_ID,
+#             dataset_name=self.valves.BIG_QUERY_DATASET,
+#             table_name=self.valves.BIG_QUERY_TABLE,
+#             embedding=embedding,
+#             distance_strategy=DistanceStrategy.COSINE,
+#         )
 
     async def on_shutdown(self) -> None:
         """This function is called when the server is stopped."""
@@ -215,7 +215,16 @@ class Pipeline:
 
     def retrieve_relevant_laws(self, query: str, k: int = 3) -> list[dict]:
         # 1. ユーザーの質問に関連するドキュメントを取得
-        retrieved_docs = self.store.similarity_search(query, k)
+        # retrieved_docs = self.store.similarity_search(query, k)
+        retrieved_docs_mock = [
+            {
+                "page_content": "法令の内容",
+                "metadata": {
+                    "law_name": "法令名",
+                    "law_number": "法令番号",
+                },
+            }
+        ]
 
         # 2. 取得したドキュメントの整形
         # Relevant Docs Format:
@@ -228,7 +237,7 @@ class Pipeline:
         ## }
         relevant_docs = []
 
-        for doc in retrieved_docs:
+        for doc in retrieved_docs_mock:
             response_doc = {
                 "content": doc.page_content,
                 "metadata": doc.metadata,
