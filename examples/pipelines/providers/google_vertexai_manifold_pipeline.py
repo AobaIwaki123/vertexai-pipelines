@@ -26,7 +26,9 @@ from vertexai.generative_models import (
     HarmCategory,
     Part,
 )
-
+from langchain.vectorstores.utils import DistanceStrategy
+from langchain_community.vectorstores import BigQueryVectorSearch
+from langchain_google_vertexai import VertexAIEmbeddings
 
 class Pipeline:
     """Google GenAI pipeline"""
