@@ -85,6 +85,7 @@ class Pipeline:
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
             print(f"Messages: {messages}")
+            print(f"Body: {body}")
 
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
