@@ -16,7 +16,9 @@ usage_instructions:
 import os
 from typing import Iterator, List, Union
 
+import numpy as np
 import vertexai
+from google.cloud import bigquery
 from pydantic import BaseModel, Field
 from vertexai.generative_models import (
     Content,
@@ -86,6 +88,17 @@ class Pipeline:
             print(f"Stream mode: {body.get('stream', False)}")
             print(f"Messages: {messages}")
             print(f"Body: {body}")
+
+            # ユーザーの質問から関連する法令情報を取得
+            retrieved_laws = self.retrieve_relevant_laws(user_message, k=3)
+            if retrieved_laws:
+                # 取得した法令情報をテキストに整形
+                laws_context = "以下は関連法令の詳細情報です：\n"
+                for law in retrieved_laws:
+                    laws_context += f"【{law['law_name']}】\n{law['law_content']}\n\n"
+
+                # システムメッセージとして先頭に追加する
+                messages.insert(0, {"role": "system", "content": laws_context})
 
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
@@ -168,3 +181,50 @@ class Pipeline:
             contents.append(Content(role=role, parts=parts))
 
         return contents
+
+    # ※ここでは、ユーザーの質問から埋め込みを得る関数 compute_embedding() を仮定します。
+
+    def compute_embedding(self, text: str) -> np.ndarray:
+        # ここにVertex AIや他の埋め込みモデルを用いた処理を実装してください
+        # 例: embedding = embedding_model.embed(text)
+        pass
+
+    def retrieve_relevant_laws(self, query: str, k: int = 3) -> list:
+        # 1. ユーザーの質問からベクトルを計算
+#         query_embedding = self.compute_embedding(query)  # numpy array 等
+# 
+#         # 2. BigQueryクライアントの初期化（環境変数で設定済みのプロジェクトIDを使用）
+#         client = bigquery.Client(project=self.valves.GOOGLE_PROJECT_ID)
+# 
+#         # 3. ベクトル検索のクエリ（実際のSQLはBigQueryでの実装方法に合わせて調整してください）
+#         query_string = """
+#         WITH LawData AS (
+#         SELECT
+#             law_name,
+#             law_content,
+#             embedding
+#         FROM `your_project.your_dataset.laws_detailed`
+#         )
+#         SELECT
+#         law_name,
+#         law_content,
+#         ML.PREDICT_VECTOR_SIMILARITY(embedding, @query_embedding) AS similarity
+#         FROM LawData
+#         WHERE ML.PREDICT_VECTOR_SIMILARITY(embedding, @query_embedding) > 0.8
+#         ORDER BY similarity DESC
+#         LIMIT @k
+#         """
+# 
+#         job_config = bigquery.QueryJobConfig(
+#             query_parameters=[
+#                 bigquery.ArrayQueryParameter(
+#                     "query_embedding", "FLOAT64", query_embedding.tolist()
+#                 ),
+#                 bigquery.ScalarQueryParameter("k", "INT64", k),
+#             ]
+#         )
+# 
+#         query_job = client.query(query_string, job_config=job_config)
+#         results = query_job.result()
+        # return [dict(row) for row in results]
+        return [{"法令名": "法律A", "法令内容": "法律Aの内容"}, {"法令名": "法律B", "法令内容": "法律Bの内容"}]
