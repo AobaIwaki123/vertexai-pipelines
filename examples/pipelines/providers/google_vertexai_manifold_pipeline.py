@@ -17,9 +17,9 @@ import os
 from typing import Iterator, List, Union
 
 import vertexai
-# from langchain.vectorstores.utils import DistanceStrategy
-# from langchain_community.vectorstores import BigQueryVectorSearch
-# from langchain_google_vertexai import VertexAIEmbeddings
+from langchain.vectorstores.utils import DistanceStrategy
+from langchain_community.vectorstores import BigQueryVectorSearch
+from langchain_google_vertexai import VertexAIEmbeddings
 from pydantic import BaseModel, Field
 from vertexai.generative_models import (
     Content,
@@ -40,8 +40,6 @@ class Pipeline:
         GOOGLE_PROJECT_ID: str = ""
         GOOGLE_CLOUD_REGION: str = ""
         USE_PERMISSIVE_SAFETY: bool = Field(default=False)
-        # BIG_QUERY_DATASET: str = ""
-        # BIG_QUERY_TABLE: str = ""
 
     def __init__(self):
         self.type = "manifold"
