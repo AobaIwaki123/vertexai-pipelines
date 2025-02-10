@@ -238,8 +238,8 @@ class Pipeline:
 
         for doc in retrieved_docs_mock:
             response_doc = {
-                "content": doc.page_content,
-                "metadata": doc.metadata,
+                "content": doc['page_content'],
+                "metadata": doc['metadata'],
             }
             relevant_docs.append(response_doc)
 
