@@ -6,7 +6,7 @@ version: 1.0
 license: MIT
 description: A pipeline for generating text using Google's GenAI models in Open-WebUI.
 requirements: vertexai, langchain==0.3.3, langchain-community==0.3.2, langchain-google-vertexai==2.0.4, pydantic==2.7.4
-environment_variables: GOOGLE_PROJECT_ID
+environment_variables: GOOGLE_PROJECT_ID, BIG_QUERY_DATASET, BIG_QUERY_TABLE
 usage_instructions:
   To use Gemini with the Vertex AI API, a service account with the appropriate role (e.g., `roles/aiplatform.user`) is required.
   - For deployment on Google Cloud: Associate the service account with the deployment.
@@ -40,8 +40,8 @@ class Pipeline:
         GOOGLE_PROJECT_ID: str = ""
         GOOGLE_CLOUD_REGION: str = ""
         USE_PERMISSIVE_SAFETY: bool = Field(default=False)
-        # BIG_QUERY_DATASET: str = ""
-        # BIG_QUERY_TABLE: str = ""
+        BIG_QUERY_DATASET: str = ""
+        BIG_QUERY_TABLE: str = ""
 
     def __init__(self):
         self.type = "manifold"
@@ -52,8 +52,8 @@ class Pipeline:
                 "GOOGLE_PROJECT_ID": os.getenv("GOOGLE_PROJECT_ID", ""),
                 "GOOGLE_CLOUD_REGION": os.getenv("GOOGLE_CLOUD_REGION", ""),
                 "USE_PERMISSIVE_SAFETY": False,
-                # "BIG_queRY_DATASET": os.getenv("BIG_QUERY_DATASET", ""),
-                # "BIG_QUERY_TABLE": os.getenv("BIG_QUERY_TABLE", ""),
+                "BIG_QUERY_DATASET": os.getenv("BIG_QUERY_DATASET", ""),
+                "BIG_QUERY_TABLE": os.getenv("BIG_QUERY_TABLE", ""),
             }
         )
         self.pipelines = [
