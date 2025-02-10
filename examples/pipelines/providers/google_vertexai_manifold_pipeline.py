@@ -106,6 +106,25 @@ class Pipeline:
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
 
+            relevant_docs = self.retrieve_relevant_laws(user_message)
+            
+            if relevant_docs:
+                # 取得した法令情報をテキストに整形
+                laws_context = "以下はユーザーの質問に関連する法令情報です:\n"
+                laws_context += (
+                    "ユーザーからの質問に対して、法令をもとに回答してください。\n"
+                )
+                laws_context += (
+                    "この時、参照した法令番号と法令名を明記してください。\n\n"
+                )
+                for law in relevant_docs:
+                    laws_context += f"法令名: {law['metadata']['law_name']}\n"
+                    laws_context += f"法令番号: {law['metadata']['law_number']}\n"
+                    laws_context += f"法令内容: {law['content']}\n\n"
+
+                # システムメッセージとして先頭に追加する
+                messages.insert(0, {"role": "system", "content": laws_context})
+
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
             )
