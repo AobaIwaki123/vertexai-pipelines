@@ -13,3 +13,5 @@ requests==2.32.2
 aiohttp==3.9.5
 httpx
 
+langchain==0.3.18
+langchain-community==0.3.17
