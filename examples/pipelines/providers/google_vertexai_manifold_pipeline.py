@@ -94,7 +94,7 @@ class Pipeline:
             print(f"Retrieved laws: {retrieved_laws}")
             if retrieved_laws:
                 # 取得した法令情報をテキストに整形
-                laws_context = "以下は関連法令の詳細情報です：\n"
+                laws_context = "以下は関連法令の詳細情報です\n取得した法令情報をもとにユーザーの質問に回答をしてください:\n"
                 for law in retrieved_laws:
                     laws_context += f"【{law['law_name']}】\n{law['law_content']}\n\n"
 
