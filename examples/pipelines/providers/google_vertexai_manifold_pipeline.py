@@ -61,11 +61,10 @@ class Pipeline:
             },
             {"id": "gemini-pro-experimental", "name": "Gemini 1.5 Pro Experimental"},
         ]
-        
-        # embedding = VertexAIEmbeddings(
-        #     model_name="textembedding-gecko-multilingual@latest",
-        #     project=self.valves.GOOGLE_PROJECT_ID,
-        # )
+        embedding = VertexAIEmbeddings(
+            model_name="textembedding-gecko-multilingual@latest",
+            project=self.valves.GOOGLE_PROJECT_ID,
+        )
 
     async def on_startup(self) -> None:
         """This function is called when the server is started."""
