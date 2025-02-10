@@ -105,6 +105,8 @@ class Pipeline:
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
             )
 
+            print(f"System message: {system_message}")
+
             model = GenerativeModel(
                 model_name=model_id,
                 system_instruction=system_message,
@@ -133,7 +135,7 @@ class Pipeline:
             else:
                 safety_settings = body.get("safety_settings")
 
-            print(f"Generating content... with {contents}")
+            print("Generating content...")
 
             response = model.generate_content(
                 contents,
