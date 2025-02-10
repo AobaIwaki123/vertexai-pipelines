@@ -105,7 +105,7 @@ class Pipeline:
 
             print(f"Pipe function called for model: {model_id}")
             print(f"Stream mode: {body.get('stream', False)}")
-            print(f"User Message: {user_message}")
+            # print(f"User Message: {user_message}")
 
             relevant_docs = self.retrieve_relevant_laws(user_message)
             
@@ -125,8 +125,8 @@ class Pipeline:
 
                 # システムメッセージとして先頭に追加する
                 messages.insert(0, {"role": "system", "content": laws_context})
-                
-            print(messages)
+
+            print(f"Mesage: {messages}")
 
             system_message = next(
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
