@@ -129,6 +129,8 @@ class Pipeline:
                 (msg["content"] for msg in messages if msg["role"] == "system"), None
             )
 
+            print(f"System message: {system_message}")
+
             model = GenerativeModel(
                 model_name=model_id,
                 system_instruction=system_message,
