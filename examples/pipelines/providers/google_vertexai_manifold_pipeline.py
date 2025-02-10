@@ -50,8 +50,6 @@ class Pipeline:
                 "GOOGLE_PROJECT_ID": os.getenv("GOOGLE_PROJECT_ID", ""),
                 "GOOGLE_CLOUD_REGION": os.getenv("GOOGLE_CLOUD_REGION", ""),
                 "USE_PERMISSIVE_SAFETY": False,
-                # "BIG_QUERY_DATASET": os.getenv("BIG_QUERY_DATASET", ""),
-                # "BIG_QUERY_TABLE": os.getenv("BIG_QUERY_TABLE", ""),
             }
         )
         self.pipelines = [
