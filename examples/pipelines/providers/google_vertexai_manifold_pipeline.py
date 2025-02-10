@@ -60,14 +60,15 @@ class Pipeline:
             },
             {"id": "gemini-pro-experimental", "name": "Gemini 1.5 Pro Experimental"},
         ]
-        embedding = VertexAIEmbeddings(
-            model_name="textembedding-gecko-multilingual@latest",
-            project=self.valves.GOOGLE_PROJECT_ID,
-        )
+        PROJECT_ID = "zennaihackason"
         DATASET = "law_db"
         TABLE = "personal_info"
+        embedding = VertexAIEmbeddings(
+            model_name="textembedding-gecko-multilingual@latest",
+            project=PROJECT_ID,
+        )
         self.store = BigQueryVectorSearch(
-            project_id=self.valves.GOOGLE_PROJECT_ID,
+            project_id=PROJECT_ID,
             dataset_name=DATASET,
             table_name=TABLE,
             embedding=embedding,
